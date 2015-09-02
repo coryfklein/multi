@@ -8,8 +8,8 @@
 
 This will install `multi` into `/usr/local/bin`. If your `$PATH` references that directory then you will be able to use `multi` from the command line immediately. Otherwise add `/usr/local/bin` to your `$PATH` first.
 
-This will also install a configurable `.multi` file in your home directory.
+This will also install a `.multi` configuration file in your home directory.
 
 # Configuration
 
-Currently you must whitelist repositories to be searched by specifying each one in the `REPOS` variable of `~/.multi`.
+Before using `multi` for the first time you must specify the repositories to be searched in the `REPOS` variable in your `~/.multi` file.

@@ -6,25 +6,23 @@ get_abs_filename() {
     echo "$(cd "$(dirname "$1")" && pwd)/$(basename "$1")"
 }
 
-DEFAULT_RC_FILENAME="default.config"
-HOME_RC_FILENAME="${HOME}/.multi"
-ETC_RC_FILENAME="/etc/multi"
+DEFAULT_CONFIG_FILENAME="default.config"
+HOME_CONFIG_FILENAME="${HOME}/.multi"
+ETC_CONFIG_FILENAME="/etc/multi"
 EXECUTABLE="multi"
 INSTALLED_EXECUTABLE="/usr/local/bin/${EXECUTABLE}"
 EXECUTABLE_SOURCE=$(get_abs_filename "./${EXECUTABLE}")
 
-source $DEFAULT_RC_FILENAME
-
-# Install the default rc file in the user's home directory
-if [[ ! -f $HOME_RC_FILENAME ]]; then
-    echo "Copying default config to $HOME_RC_FILENAME"
-    cp "$DEFAULT_RC_FILENAME" "$HOME_RC_FILENAME"
+# Install the default config file in the user's home directory
+if [[ ! -f $HOME_CONFIG_FILENAME ]]; then
+    echo "Copying default config to $HOME_CONFIG_FILENAME"
+    cp "$DEFAULT_CONFIG_FILENAME" "$HOME_CONFIG_FILENAME"
 fi
 
-# Install the default rc file into /etc
-if [[ ! -f $ETC_RC_FILENAME ]]; then
-    echo "Copying default config to $ETC_RC_FILENAME"
-    sudo cp "$DEFAULT_RC_FILENAME" "$ETC_RC_FILENAME"
+# Install the default config file into /etc
+if [[ ! -f $ETC_CONFIG_FILENAME ]]; then
+    echo "Copying default config to $ETC_CONFIG_FILENAME"
+    sudo cp "$DEFAULT_CONFIG_FILENAME" "$ETC_CONFIG_FILENAME"
 fi
 
 if [[ ! -L $INSTALLED_EXECUTABLE ]]; then

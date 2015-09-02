@@ -1,0 +1,33 @@
+#!/bin/bash
+
+# From http://stackoverflow.com/a/21188136/446554
+get_abs_filename() {
+    # $1 : relative filename
+    echo "$(cd "$(dirname "$1")" && pwd)/$(basename "$1")"
+}
+
+DEFAULT_RC_FILENAME="default.config"
+HOME_RC_FILENAME="${HOME}/.multi"
+ETC_RC_FILENAME="/etc/multi"
+EXECUTABLE="multi"
+INSTALLED_EXECUTABLE="/usr/local/bin/${EXECUTABLE}"
+EXECUTABLE_SOURCE=$(get_abs_filename "./${EXECUTABLE}")
+
+source $DEFAULT_RC_FILENAME
+
+# Install the default rc file in the user's home directory
+if [[ ! -f $HOME_RC_FILENAME ]]; then
+    echo "Copying default config to $HOME_RC_FILENAME"
+    cp "$DEFAULT_RC_FILENAME" "$HOME_RC_FILENAME"
+fi
+
+# Install the default rc file into /etc
+if [[ ! -f $ETC_RC_FILENAME ]]; then
+    echo "Copying default config to $ETC_RC_FILENAME"
+    sudo cp "$DEFAULT_RC_FILENAME" "$ETC_RC_FILENAME"
+fi
+
+if [[ ! -L $INSTALLED_EXECUTABLE ]]; then
+    echo "Installing $EXECUTABLE to $INSTALLED_EXECUTABLE"
+    ln -s "$EXECUTABLE_SOURCE" "$INSTALLED_EXECUTABLE"
+fi

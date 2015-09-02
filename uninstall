@@ -1,0 +1,23 @@
+#!/bin/bash
+
+HOME_CONFIG_FILENAME="${HOME}/.multi"
+ETC_CONFIG_FILENAME="/etc/multi"
+EXECUTABLE="multi"
+INSTALLED_EXECUTABLE="/usr/local/bin/${EXECUTABLE}"
+
+# Remove the default config file from the user's home directory
+if [[ -f $HOME_CONFIG_FILENAME ]]; then
+    echo "Removing default config from $HOME_CONFIG_FILENAME"
+    rm "$HOME_CONFIG_FILENAME"
+fi
+
+# Remove the default config file from /etc
+if [[ -f $ETC_CONFIG_FILENAME ]]; then
+    echo "Removing default config from $ETC_CONFIG_FILENAME"
+    sudo rm "$ETC_CONFIG_FILENAME"
+fi
+
+if [[ -L $INSTALLED_EXECUTABLE ]]; then
+    echo "Removing $EXECUTABLE from $INSTALLED_EXECUTABLE"
+    rm "$INSTALLED_EXECUTABLE"
+fi

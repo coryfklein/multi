@@ -22,6 +22,10 @@ if [[ -z "$REPOS" ]]; then
     exit 1
 fi
 
+if [[ -z "$REPOS" ]]; then
+  BASE_DIR=$(pwd)
+fi
+
 for REPO in $REPOS; do
     REPO_DIR="${BASE_DIR}/$REPO"
     if [[ -d "$REPO_DIR" ]]; then

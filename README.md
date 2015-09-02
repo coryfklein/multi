@@ -36,4 +36,3 @@ phantomjs
 ====================================================
 test/ghostdriver-test/fixtures/common/macbeth.html:<A NAME=1.3.55>Are ye fantastical, or that indeed</A><br>
 test/ghostdriver-test/fixtures/common/macbeth.html:<A NAME=1.3.148>My thought, whose murder yet is but fantastical,</A><br>
-$ 

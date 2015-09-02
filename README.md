@@ -1,6 +1,6 @@
 # multi
 
-`multi` is a tool for git-grep'ing multiple repositories at once. Often at work I have multiple repositories that are inter-related and I want to grep through all of them at once. This can now be done using `multi`.
+`multi` is a tool for using `git grep` on multiple repositories at once. Often at work I have multiple repositories that are inter-related and I want to grep through all of them at once. This can now be done using `multi`.
 
 # Install
 

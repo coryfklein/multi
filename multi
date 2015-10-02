@@ -30,7 +30,6 @@ fi
 
 for REPO in $REPOS; do
     REPO_DIR="${BASE_DIR}/${REPO}"
-    echo "REPO_DIR: $REPO_DIR"
     if [[ -d "$REPO_DIR" ]]; then
         cd $REPO_DIR
         echo $REPO

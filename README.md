@@ -6,7 +6,9 @@
 
 `./install`
 
-This will install `multi` into `/usr/local/bin`. If your `$PATH` references that directory then you will be able to use `multi` from the command line immediately. Otherwise add `/usr/local/bin` to your `$PATH` first.
+This will install `multi` into `$HOME/.local/bin`. If your `$PATH` references that directory then you will be able to use `multi` from the command line immediately. Otherwise add `$HOME/.local/bin` to your `$PATH` first.
+
+Installing with flag `./install --global` will install `multi` into `usr/local/bin`, add `usr/local/bin` to your `$PATH` if it isn't already there.
 
 This will also install a `.multi` configuration file in your home directory.
 
@@ -36,3 +38,12 @@ phantomjs
 ====================================================
 test/ghostdriver-test/fixtures/common/macbeth.html:<A NAME=1.3.55>Are ye fantastical, or that indeed</A><br>
 test/ghostdriver-test/fixtures/common/macbeth.html:<A NAME=1.3.148>My thought, whose murder yet is but fantastical,</A><br>
+```
+
+# Uninstall
+
+`./uninstall`
+
+This will uninstall `multi` from `$HOME/.local/bin`, `/usr/local/bin`, `$HOME/.multi` and `/etc/multi`.
+
+Uninstalling with flag `./uninstall --exclude-local-config` will exclude `$HOME/.multi` from the uninstall.

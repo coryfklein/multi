@@ -3,21 +3,39 @@
 HOME_CONFIG_FILENAME="${HOME}/.multi"
 ETC_CONFIG_FILENAME="/etc/multi"
 EXECUTABLE="multi"
-INSTALLED_EXECUTABLE="/usr/local/bin/${EXECUTABLE}"
+USER_BIN="${HOME}/.local/bin"
+LOCAL_EXECUTABLE="${USER_BIN}/${EXECUTABLE}"
+SYSTEM_EXECUTABLE="/usr/local/bin/${EXECUTABLE}"
+
+EXCLUDE_CONFIG="false"
+
+if [[ "$1" == "--exclude-local-config" ]]; then
+    EXCLUDE_CONFIG="true"
+    shift
+fi
 
 # Remove the default config file from the user's home directory
-if [[ -f $HOME_CONFIG_FILENAME ]]; then
-    echo "Removing default config from $HOME_CONFIG_FILENAME"
+if [[ "$EXCLUDE_CONFIG" != "true" && -f $HOME_CONFIG_FILENAME ]]; then
+    echo "Removing user config: $HOME_CONFIG_FILENAME"
     rm "$HOME_CONFIG_FILENAME"
+elif [[ "$EXCLUDE_CONFIG" == "true" ]]; then
+    echo "WARN: Excluding $HOME_CONFIG_FILENAME from uninstall..."
+fi
+
+# Remove user's local executable
+if [[ -f $LOCAL_EXECUTABLE ]]; then
+    echo "Removing local executable: $LOCAL_EXECUTABLE"
+    rm "$LOCAL_EXECUTABLE"
 fi
 
 # Remove the default config file from /etc
 if [[ -f $ETC_CONFIG_FILENAME ]]; then
-    echo "Removing default config from $ETC_CONFIG_FILENAME"
+    echo "Removing system config: $ETC_CONFIG_FILENAME"
     sudo rm "$ETC_CONFIG_FILENAME"
 fi
 
-if [[ -L $INSTALLED_EXECUTABLE ]]; then
-    echo "Removing $EXECUTABLE from $INSTALLED_EXECUTABLE"
-    rm "$INSTALLED_EXECUTABLE"
+# Remove system executable
+if [[ -f $SYSTEM_EXECUTABLE ]]; then
+    echo "Removing system executable: $SYSTEM_EXECUTABLE"
+    sudo rm "$SYSTEM_EXECUTABLE"
 fi

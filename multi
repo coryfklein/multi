@@ -23,18 +23,19 @@ if [[ -z "$REPOS" ]]; then
 fi
 
 if [[ -z "$BASE_DIR" ]]; then
-  BASE_DIR=$(pwd)
+    BASE_DIR=$(pwd)
 else
-  BASE_DIR="${BASE_DIR/#\~/$HOME}"
+    BASE_DIR="${BASE_DIR/#\~/$HOME}"
 fi
 
 for REPO in $REPOS; do
     REPO_DIR="${BASE_DIR}/${REPO}"
     if [[ -d "$REPO_DIR" ]]; then
-        cd $REPO_DIR
-        echo $REPO
+        cd "$REPO_DIR"
+        echo ""
+        echo "$REPO"
         echo "===================================================="
         GIT_PAGER='' git grep $GIT_GREP_OPTIONS "$@"
-        cd $base_path
+        cd "$BASE_DIR"
     fi
 done

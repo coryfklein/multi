@@ -2,31 +2,81 @@
 
 # From http://stackoverflow.com/a/21188136/446554
 get_abs_filename() {
-    # $1 : relative filename
     echo "$(cd "$(dirname "$1")" && pwd)/$(basename "$1")"
 }
 
+MODE="$1"  # Usage: ./install [--global]
 INSTALL_SCRIPT_DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
 DEFAULT_CONFIG_FILENAME="default.config"
-HOME_CONFIG_FILENAME="${HOME}/.multi"
-ETC_CONFIG_FILENAME="/etc/multi"
 EXECUTABLE="multi"
-INSTALLED_EXECUTABLE="/usr/local/bin/${EXECUTABLE}"
 EXECUTABLE_SOURCE=$(get_abs_filename "${INSTALL_SCRIPT_DIR}/${EXECUTABLE}")
 
-# Install the default config file in the user's home directory
-if [[ ! -f $HOME_CONFIG_FILENAME ]]; then
-    echo "Copying default config to $HOME_CONFIG_FILENAME"
-    cp "${INSTALL_SCRIPT_DIR}/$DEFAULT_CONFIG_FILENAME" "$HOME_CONFIG_FILENAME"
-fi
+if [[ "$MODE" == "--global" ]]; then
+    echo "Installing to /usr/local/bin"
+    echo ""
 
-# Install the default config file into /etc
-if [[ ! -f $ETC_CONFIG_FILENAME ]]; then
-    echo "Copying default config to $ETC_CONFIG_FILENAME"
-    sudo cp "${INSTALL_SCRIPT_DIR}/$DEFAULT_CONFIG_FILENAME" "$ETC_CONFIG_FILENAME"
-fi
+    HOME_CONFIG_FILENAME="${HOME}/.multi"
+    ETC_CONFIG_FILENAME="/etc/multi"
+    INSTALLED_EXECUTABLE="/usr/local/bin/${EXECUTABLE}"
 
-if [[ ! -L $INSTALLED_EXECUTABLE ]]; then
-    echo "Installing $EXECUTABLE to $INSTALLED_EXECUTABLE"
-    ln -s "$EXECUTABLE_SOURCE" "$INSTALLED_EXECUTABLE"
+    # Install the default config file in the user's home directory
+    if [[ ! -f $HOME_CONFIG_FILENAME ]]; then
+        echo "Copying default config to $HOME_CONFIG_FILENAME"
+        cp "${INSTALL_SCRIPT_DIR}/$DEFAULT_CONFIG_FILENAME" "$HOME_CONFIG_FILENAME"
+    elif [[ -f $HOME_CONFIG_FILENAME ]]; then
+        echo "WARN: $HOME_CONFIG_FILENAME already exists. Not overwriting."
+    fi
+
+    # Install the default config file into /etc
+    if [[ ! -f $ETC_CONFIG_FILENAME ]]; then
+        echo "Copying default config to $ETC_CONFIG_FILENAME"
+        sudo cp "${INSTALL_SCRIPT_DIR}/$DEFAULT_CONFIG_FILENAME" "$ETC_CONFIG_FILENAME"
+    elif [[ -f $ETC_CONFIG_FILENAME ]]; then
+        echo "WARN: $ETC_CONFIG_FILENAME already exists. Not overwriting."
+    fi
+
+    # Install executable in /usr/local/bin
+    if [[ ! -f $INSTALLED_EXECUTABLE ]]; then
+        echo "Installing $EXECUTABLE to $INSTALLED_EXECUTABLE"
+        sudo cp "$EXECUTABLE_SOURCE" "$INSTALLED_EXECUTABLE"
+        sudo chmod +x "$INSTALLED_EXECUTABLE"
+    elif [[ -f $INSTALLED_EXECUTABLE ]]; then
+        echo "WARN: $INSTALLED_EXECUTABLE already exists. Not overwriting."
+    fi
+
+    if [[ ":$PATH:" != *":/usr/local/bin:"* ]]; then
+        echo "WARNING: /usr/local/bin is not in your PATH."
+    fi
+
+else
+    echo "Installing locally to ~/.local/bin"
+    echo ""
+
+    HOME_CONFIG_FILENAME="${HOME}/.multi"
+    USER_BIN="${HOME}/.local/bin"
+    INSTALLED_EXECUTABLE="${USER_BIN}/${EXECUTABLE}"
+
+    # Create ~/.local/bin if it doesn't exist
+    mkdir -p "$USER_BIN"
+
+    # Install the default config file in the user's home directory
+    if [[ ! -f $HOME_CONFIG_FILENAME ]]; then
+        echo "Copying default config to $HOME_CONFIG_FILENAME"
+        cp "${INSTALL_SCRIPT_DIR}/$DEFAULT_CONFIG_FILENAME" "$HOME_CONFIG_FILENAME"
+    elif [[ -f $HOME_CONFIG_FILENAME ]]; then
+        echo "WARN: $HOME_CONFIG_FILENAME already exists. Not overwriting."
+    fi
+
+    # Install executable in ~/.local/bin
+    if [[ ! -f $INSTALLED_EXECUTABLE ]]; then
+        echo "Installing $EXECUTABLE to $INSTALLED_EXECUTABLE"
+        cp "$EXECUTABLE_SOURCE" "$INSTALLED_EXECUTABLE"
+        chmod +x "$INSTALLED_EXECUTABLE"
+    elif [[ -f $INSTALLED_EXECUTABLE ]]; then
+        echo "WARN: $INSTALLED_EXECUTABLE already exists. Not overwriting."
+    fi
+
+    if [[ ":$PATH:" != *":$USER_BIN:"* ]]; then
+        echo "WARNING: $USER_BIN is not in your PATH."
+    fi
 fi
